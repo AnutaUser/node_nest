@@ -7,14 +7,15 @@ import { UpdateUserDto } from './dto/update-user.dto';
 @Injectable()
 export class UsersService {
   private users: any = [];
+
   async create(createUserDto: CreateUserDto): Promise<CreateUserDto> {
     const newUser = { userId: uuidv4(), ...createUserDto };
     await this.users.push(newUser);
     return newUser;
   }
 
-  findAll(): CreateUserDto[] {
-    return this.users;
+  async findAll(): Promise<CreateUserDto[]> {
+    return await this.users;
   }
 
   async findOne(userId: string): Promise<CreateUserDto> {

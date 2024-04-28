@@ -6,7 +6,7 @@ import { CreatePetDto } from './create-pet.dto';
 export class UpdatePetDto extends PartialType(CreatePetDto) {
   @ApiProperty({ required: false })
   @IsString()
-  name: string;
+  petName: string;
 
   @ApiProperty({ required: false })
   @IsOptional()

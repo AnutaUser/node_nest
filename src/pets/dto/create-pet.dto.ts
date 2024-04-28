@@ -5,7 +5,7 @@ export class CreatePetDto {
   @ApiProperty({ required: true })
   @IsString()
   @IsNotEmpty()
-  name: string;
+  petName: string;
 
   @ApiProperty({ required: true })
   @IsOptional()

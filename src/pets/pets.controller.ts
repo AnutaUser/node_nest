@@ -1,12 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { PetsService } from './pets.service';
 import { CreatePetDto } from './dto/create-pet.dto';
 import { UpdatePetDto } from './dto/update-pet.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('pets')
 export class PetsController {
   constructor(private readonly petsService: PetsService) {}
 
+  @ApiTags('Pets')
   @Post()
   create(@Body() createPetDto: CreatePetDto) {
     return this.petsService.create(createPetDto);
@@ -17,18 +27,18 @@ export class PetsController {
     return this.petsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.petsService.findOne(+id);
+  @Get(':petId')
+  findOne(@Param('petId') petId: string) {
+    return this.petsService.findOne(petId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePetDto: UpdatePetDto) {
-    return this.petsService.update(+id, updatePetDto);
+  @Patch(':petId')
+  update(@Param('petId') petId: string, @Body() updatePetDto: UpdatePetDto) {
+    return this.petsService.update(petId, updatePetDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.petsService.remove(+id);
+  @Delete(':petId')
+  remove(@Param('petId') petId: string) {
+    return this.petsService.remove(petId);
   }
 }
