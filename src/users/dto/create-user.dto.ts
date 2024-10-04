@@ -38,7 +38,7 @@ export class CreateUserDto {
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@#$%^&(){}:;,=]).{8,50}$/)
   password: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
   city: string;
@@ -52,14 +52,4 @@ export class CreateUserDto {
   @IsOptional()
   @IsBoolean()
   status: boolean;
-
-  @ApiProperty({ required: false })
-  @IsString()
-  @IsOptional()
-  createdAt;
-
-  @ApiProperty({ required: false })
-  @IsString()
-  @IsOptional()
-  updatedAt;
 }

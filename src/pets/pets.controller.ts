@@ -22,21 +22,25 @@ export class PetsController {
     return this.petsService.create(createPetDto);
   }
 
+  @ApiTags('Pets')
   @Get()
   findAll() {
     return this.petsService.findAll();
   }
 
+  @ApiTags('Pets')
   @Get(':petId')
   findOne(@Param('petId') petId: string) {
     return this.petsService.findOne(petId);
   }
 
+  @ApiTags('Pets')
   @Patch(':petId')
   update(@Param('petId') petId: string, @Body() updatePetDto: UpdatePetDto) {
     return this.petsService.update(petId, updatePetDto);
   }
 
+  @ApiTags('Pets')
   @Delete(':petId')
   remove(@Param('petId') petId: string) {
     return this.petsService.remove(petId);

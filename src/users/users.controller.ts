@@ -19,13 +19,13 @@ export class UsersController {
   @ApiTags('Users')
   @Get()
   findAll() {
-    return this.usersService.findAll();
+    return this.usersService.findAllUsers();
   }
 
   @ApiTags('Users')
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    return this.usersService.createUser(createUserDto);
   }
 
   @ApiTags('Users')
