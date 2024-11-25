@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { PetsModule } from './pets/pets.module';
 import { TypeOrmConfiguration } from './configs/database/type-orm-configuration';
 import { AuthModule } from './auth/auth.module';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AuthModule } from './auth/auth.module';
     UsersModule,
     PetsModule,
     AuthModule,
+    PassportModule,
   ],
   controllers: [AppController],
   providers: [AppService],

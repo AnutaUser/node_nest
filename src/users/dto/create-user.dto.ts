@@ -1,16 +1,41 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsOptional,
   IsString,
   IsStrongPassword,
   Matches,
   Max,
   Min,
+  ValidateNested,
 } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+
+export class Address {
+  @ApiProperty({ required: false, example: '00-000' })
+  @IsString()
+  @IsOptional()
+  kode?: string;
+
+  @ApiProperty({ required: false, example: 'Paris' })
+  @IsString()
+  @IsOptional()
+  city?: string;
+
+  @ApiProperty({ required: false, example: 'Boulevard' })
+  @IsString()
+  @IsOptional()
+  street?: string;
+
+  @ApiProperty({ required: false, example: '503A' })
+  @IsString()
+  @IsOptional()
+  number?: string;
+}
 
 export class CreateUserDto {
   @ApiProperty({ required: true })
@@ -39,9 +64,11 @@ export class CreateUserDto {
   password: string;
 
   @ApiProperty({ required: false })
-  @IsString()
+  @IsObject()
   @IsOptional()
-  city: string;
+  @Type(() => Address)
+  @ValidateNested()
+  address: Address;
 
   @ApiProperty({ required: false })
   @IsString()

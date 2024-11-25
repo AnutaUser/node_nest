@@ -1,9 +1,24 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
+class Address {
+  @Column({ type: 'varchar', nullable: true })
+  kode?: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  city?: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  street?: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  number?: string;
+}
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar', length: 20, nullable: false })
   username: string;
@@ -17,8 +32,8 @@ export class User {
   @Column({ type: 'varchar', nullable: false })
   password: string;
 
-  @Column({ type: 'varchar', nullable: false })
-  city: string;
+  @Column(() => Address)
+  address: Address;
 
   @Column({ type: 'varchar', nullable: true })
   avatar: string;

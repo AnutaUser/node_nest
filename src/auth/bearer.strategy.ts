@@ -1,10 +1,11 @@
+import * as process from 'node:process';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Strategy } from 'passport';
-import { AuthService } from './auth.service';
+import { Strategy } from 'passport-http-bearer';
 import { ExtractJwt } from 'passport-jwt';
-import * as process from 'node:process';
+
+import { AuthService } from './auth.service';
 import { User } from '../users/entities/user.entity';
 
 @Injectable()

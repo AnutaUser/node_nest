@@ -51,22 +51,26 @@ export class UsersService {
   }
 
   async findAllUsers(): Promise<User[]> {
-    return await this.usersRepository.find();
+    const users = await this.usersRepository.find();
+    // const findUser = users.find((user) => user.id === 7);
+
+    // console.log(typeof findUser.address);
+    return users;
   }
 
   async findOne(userId: string): Promise<CreateUserDto> {
-    return await this.usersRepository.findOne({ where: { id: +userId } });
+    return await this.usersRepository.findOne({ where: { id: userId } });
   }
 
   async update(userId: string, updateUserDto: UpdateUserDto) {
     const user = await this.usersRepository.findOne({
-      where: { id: +userId },
+      where: { id: userId },
     });
     return { ...user, updateUserDto };
   }
 
   async remove(userId: string) {
-    await this.usersRepository.delete({ id: +userId });
+    await this.usersRepository.delete({ id: userId });
 
     return `This action removes a #${userId} user`;
   }
