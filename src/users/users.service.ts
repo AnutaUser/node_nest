@@ -51,11 +51,7 @@ export class UsersService {
   }
 
   async findAllUsers(): Promise<User[]> {
-    const users = await this.usersRepository.find();
-    // const findUser = users.find((user) => user.id === 7);
-
-    // console.log(typeof findUser.address);
-    return users;
+    return await this.usersRepository.find();
   }
 
   async findOne(userId: string): Promise<CreateUserDto> {
