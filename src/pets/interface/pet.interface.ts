@@ -1,50 +1,60 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
+  IsDate,
+  IsEmail,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
+  Max,
+  Min,
 } from 'class-validator';
 
-export class CreatePetDto {
+export class PublicUserData {
+  @ApiProperty()
+  id: string;
+
   @ApiProperty({ required: true })
   @IsString()
   @IsNotEmpty()
   petName: string;
 
   @ApiProperty({ required: true })
-  @IsNotEmpty()
-  @IsNumber()
-  age: number;
-
-  @ApiProperty({ required: true })
-  @IsOptional()
   @IsString()
+  @IsEmail()
+  @IsNotEmpty()
   type: string;
 
   @ApiProperty({ required: false })
+  @IsNumber()
   @IsOptional()
+  @Max(130)
+  @Min(18)
+  age: number;
+
+  @ApiProperty({ required: false })
   @IsString()
+  @IsOptional()
   image: string;
 
   @ApiProperty({ required: false })
-  @IsOptional()
   @IsString()
+  @IsOptional()
   logo: string;
 
   @ApiProperty({ required: true })
-  @IsNotEmpty()
+  @IsOptional()
   @IsBoolean()
   status: boolean;
 
-  @ApiProperty({ required: false })
-  @IsString()
+  @ApiProperty({ required: false, default: new Date() })
+  @IsDate()
   @IsOptional()
-  createdAt;
+  createdAt: Date;
 
-  @ApiProperty({ required: false })
-  @IsString()
+  @ApiProperty({ required: false, default: new Date() })
+  @IsDate()
   @IsOptional()
-  updatedAt;
+  updatedAt: Date;
 }

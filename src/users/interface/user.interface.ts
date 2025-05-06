@@ -8,37 +8,17 @@ import {
   IsObject,
   IsOptional,
   IsString,
-  IsStrongPassword,
-  Matches,
   Max,
   Min,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { Address } from '../dto/create-user.dto';
 
-export class Address {
-  @ApiProperty({ required: false, example: '00-000' })
-  @IsString()
-  @IsOptional()
-  kode?: string;
+export class PublicUserData {
+  @ApiProperty()
+  id: string;
 
-  @ApiProperty({ required: false, example: 'Paris' })
-  @IsString()
-  @IsOptional()
-  city?: string;
-
-  @ApiProperty({ required: false, example: 'Boulevard' })
-  @IsString()
-  @IsOptional()
-  street?: string;
-
-  @ApiProperty({ required: false, example: '503A' })
-  @IsString()
-  @IsOptional()
-  number?: string;
-}
-
-export class CreateUserDto {
   @ApiProperty({ required: true })
   @IsString()
   @IsNotEmpty()
@@ -56,13 +36,6 @@ export class CreateUserDto {
   @IsEmail()
   @IsNotEmpty()
   email: string;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  @IsStrongPassword()
-  @IsNotEmpty()
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@#$%^&(){}:;,=]).{8,50}$/)
-  password: string;
 
   @ApiProperty({ required: false })
   @IsObject()

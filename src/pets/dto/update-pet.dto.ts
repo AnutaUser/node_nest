@@ -1,5 +1,5 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 import { CreatePetDto } from './create-pet.dto';
 
@@ -12,4 +12,29 @@ export class UpdatePetDto extends PartialType(CreatePetDto) {
   @IsOptional()
   @IsString()
   type: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  age: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsBoolean()
+  status: boolean;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  image: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  logo: string;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  updatedAt;
 }

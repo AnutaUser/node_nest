@@ -40,4 +40,18 @@ export class User {
 
   @Column({ type: 'boolean', default: true })
   status: boolean;
+
+  @Column({
+    type: 'varchar',
+    default: new Date().toISOString(),
+    nullable: true,
+  })
+  createdAt: Date;
+
+  @Column({
+    type: 'varchar',
+    default: new Date().toISOString(),
+    nullable: true,
+  })
+  updatedAt: Date;
 }

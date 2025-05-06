@@ -1,38 +1,43 @@
 import { Injectable } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
 
 import { CreatePetDto } from './dto/create-pet.dto';
 import { UpdatePetDto } from './dto/update-pet.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Pet } from './entities/pet.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class PetsService {
-  private pets: any = [];
+  constructor(
+    @InjectRepository(Pet)
+    private readonly petsRepository: Repository<Pet>,
+  ) {}
 
-  async create(createPetDto: CreatePetDto): Promise<CreatePetDto> {
-    const newPet = { petId: uuidv4(), ...createPetDto };
-    return await this.pets.push(newPet);
+  async create(data: CreatePetDto): Promise<Pet> {
+    console.log(data);
+    return await this.petsRepository.save(data);
   }
 
-  async findAll(): Promise<CreatePetDto[]> {
-    return await this.pets;
+  async findAll(): Promise<Pet[]> {
+    return await this.petsRepository.find();
   }
 
-  async findOne(petId: string): Promise<CreatePetDto> {
-    return await this.pets.find((pet) => pet.petId === petId);
+  async findOne(petId: string): Promise<Pet> {
+    return await this.petsRepository.findOne({ where: { id: petId } });
   }
 
-  async update(
-    petId: string,
-    updatePetDto: UpdatePetDto,
-  ): Promise<UpdatePetDto> {
-    const index = await this.pets.findIndex((pet) => pet.petId === petId);
-    this.pets[index] = { ...this.pets[index], ...updatePetDto };
-    return this.pets[index];
+  async update(petId: string, updatePetDto: UpdatePetDto) {
+    updatePetDto.updatedAt = new Date().toISOString();
+    const pet = await this.petsRepository.findOne({
+      where: { id: petId },
+    });
+
+    console.log(pet);
+    return pet;
   }
 
   async remove(petId: string): Promise<string> {
-    const index = await this.pets.findIndex((pet) => pet.petId === petId);
-    await this.pets.splice(index, 1);
+    await this.petsRepository.delete(petId);
     return `This action removes a #${petId} pet`;
   }
 }

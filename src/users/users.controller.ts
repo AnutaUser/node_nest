@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -13,6 +14,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { PublicUserQueryDto } from '../core/query/users.query.dto';
 
 @Controller('users')
 export class UsersController {
@@ -20,8 +22,11 @@ export class UsersController {
 
   @ApiTags('Users')
   @Get()
-  findAll() {
-    return this.usersService.findAllUsers();
+  async findAll(
+    @Query()
+    query: PublicUserQueryDto,
+  ) {
+    return await this.usersService.findAllUsers(query);
   }
 
   @ApiTags('Users')

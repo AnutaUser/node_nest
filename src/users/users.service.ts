@@ -3,20 +3,62 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { paginateRawAndEntities } from 'nestjs-typeorm-paginate';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { AuthService } from '../auth/auth.service';
 import { JWTPayload } from '../auth/interface/auth.interface';
+import { PublicUserQueryDto } from '../core/query/users.query.dto';
+import { PublicUserData } from './interface/user.interface';
+import { PaginatedDto } from './pagination/response';
 
 @Injectable()
 export class UsersService {
+  userForResponse = 'id, username, age, email, avatar, status';
+
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
     private readonly authService: AuthService,
   ) {}
+
+  async findAllUsers(
+    query: PublicUserQueryDto,
+  ): Promise<PaginatedDto<PublicUserData>> {
+    query.sort = query.sort || 'id';
+    query.order = query.order || 'ASC';
+    const options = {
+      page: query.page || 1,
+      limit: query.limit || 3,
+    };
+
+    const queryBuilder = this.usersRepository
+      .createQueryBuilder('users')
+      .select(this.userForResponse);
+
+    if (query.search) {
+      queryBuilder.where('"username", IN(:...search)', {
+        search: query.search.split(','),
+      });
+    }
+
+    queryBuilder.orderBy(`"${query.sort}"`, query.order as 'ASC' | 'DESC');
+
+    const [pagination, rawResults] = await paginateRawAndEntities(
+      queryBuilder,
+      options,
+    );
+
+    return {
+      page: pagination.meta.currentPage,
+      pages: pagination.meta.totalPages,
+      countItem: pagination.meta.itemsPerPage,
+      countTotal: pagination.meta.totalItems,
+      entities: rawResults as [PublicUserData],
+    };
+  }
 
   async createUser(data: CreateUserDto) {
     const findUser = await this.usersRepository.findOne({
@@ -48,10 +90,6 @@ export class UsersService {
 
   async signIn(user: JWTPayload) {
     return await this.authService.singIn({ ...user, id: user.id });
-  }
-
-  async findAllUsers(): Promise<User[]> {
-    return await this.usersRepository.find();
   }
 
   async findOne(userId: string): Promise<CreateUserDto> {
