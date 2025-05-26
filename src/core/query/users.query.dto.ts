@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class PublicUserQueryDto {

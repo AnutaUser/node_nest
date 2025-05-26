@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 import { CreatePetDto } from './dto/create-pet.dto';
 import { UpdatePetDto } from './dto/update-pet.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Pet } from './entities/pet.entity';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class PetsService {
@@ -14,7 +14,7 @@ export class PetsService {
   ) {}
 
   async create(data: CreatePetDto): Promise<Pet> {
-    console.log(data);
+    // console.log(data);
     return await this.petsRepository.save(data);
   }
 
