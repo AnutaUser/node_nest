@@ -13,6 +13,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+
 import { Address } from '../dto/create-user.dto';
 
 export class PublicUserData {

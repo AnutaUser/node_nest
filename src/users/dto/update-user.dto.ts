@@ -1,5 +1,5 @@
-import { IsOptional, IsString } from 'class-validator';
 import { ApiProperty, OmitType } from '@nestjs/swagger';
+import { IsOptional, IsString } from 'class-validator';
 
 import { CreateUserDto } from './create-user.dto';
 
@@ -9,10 +9,6 @@ export class UpdateUserDto extends OmitType(CreateUserDto, [
 ]) {
   @ApiProperty({ required: false })
   @IsString()
-  username: string;
-
-  @ApiProperty({ required: false })
-  @IsString()
   @IsOptional()
-  city: string;
+  username: string;
 }

@@ -27,13 +27,14 @@ export class PetsService {
   }
 
   async update(petId: string, updatePetDto: UpdatePetDto) {
-    updatePetDto.updatedAt = new Date().toISOString();
+    updatePetDto.updatedAt = new Date();
+
     const pet = await this.petsRepository.findOne({
       where: { id: petId },
     });
+    await this.petsRepository.update(petId, updatePetDto);
 
-    console.log(pet);
-    return pet;
+    return { ...pet, ...updatePetDto };
   }
 
   async remove(petId: string): Promise<string> {

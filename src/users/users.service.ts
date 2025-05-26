@@ -1,22 +1,23 @@
 import * as process from 'node:process';
+
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { paginateRawAndEntities } from 'nestjs-typeorm-paginate';
+import { Repository } from 'typeorm';
 
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
 import { AuthService } from '../auth/auth.service';
 import { JWTPayload } from '../auth/interface/auth.interface';
 import { PublicUserQueryDto } from '../core/query/users.query.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
 import { PublicUserData } from './interface/user.interface';
 import { PaginatedDto } from './pagination/response';
 
 @Injectable()
 export class UsersService {
-  userForResponse = 'id, username, age, email, avatar, status';
+  // userForResponse = ['username', 'age', 'users_addressCity', 'addressStreet'];
 
   constructor(
     @InjectRepository(User)
@@ -36,7 +37,7 @@ export class UsersService {
 
     const queryBuilder = this.usersRepository
       .createQueryBuilder('users')
-      .select(this.userForResponse);
+      .select('users.*');
 
     if (query.search) {
       queryBuilder.where('"username", IN(:...search)', {
@@ -100,7 +101,12 @@ export class UsersService {
     const user = await this.usersRepository.findOne({
       where: { id: userId },
     });
-    return { ...user, updateUserDto };
+
+    user.updatedAt = new Date();
+
+    await this.usersRepository.update(user.id, updateUserDto);
+
+    return { ...user, ...updateUserDto };
   }
 
   async remove(userId: string) {
