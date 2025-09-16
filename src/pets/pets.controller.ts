@@ -7,10 +7,11 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { PetsService } from './pets.service';
+import { ApiTags } from '@nestjs/swagger';
+
 import { CreatePetDto } from './dto/create-pet.dto';
 import { UpdatePetDto } from './dto/update-pet.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { PetsService } from './pets.service';
 
 @Controller('pets')
 export class PetsController {

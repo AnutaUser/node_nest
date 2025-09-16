@@ -5,22 +5,25 @@ import {
   Get,
   Param,
   Patch,
-  Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { PublicUserQueryDto } from '../core/query/users.query.dto';
+import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 
+import { PublicUserQueryDto } from '../core/query/users.query.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { PublicUserData } from './interface/user.interface';
+import { ApiPaginatedResponse, PaginatedDto } from './pagination/response';
+import { UsersService } from './users.service';
+
+@ApiTags('Users')
+@ApiExtraModels(PublicUserData, PaginatedDto)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ApiTags('Users')
+  @ApiPaginatedResponse('entities', PublicUserData)
   @Get()
   async findAll(
     @Query()
@@ -29,20 +32,12 @@ export class UsersController {
     return await this.usersService.findAllUsers(query);
   }
 
-  @ApiTags('Users')
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.createUser(createUserDto);
-  }
-
-  @ApiTags('Users')
   @UseGuards(AuthGuard())
   @Get(':userId')
   findOne(@Param('userId') userId: string) {
     return this.usersService.findOne(userId);
   }
 
-  @ApiTags('Users')
   @Patch(':userId')
   update(
     @Param('userId') userId: string,
@@ -51,7 +46,6 @@ export class UsersController {
     return this.usersService.update(userId, updateUserDto);
   }
 
-  @ApiTags('Users')
   @Delete(':userId')
   remove(@Param('userId') userId: string) {
     return this.usersService.remove(userId);

@@ -17,8 +17,6 @@ import { PaginatedDto } from './pagination/response';
 
 @Injectable()
 export class UsersService {
-  // userForResponse = ['username', 'age', 'users_addressCity', 'addressStreet'];
-
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
@@ -30,6 +28,7 @@ export class UsersService {
   ): Promise<PaginatedDto<PublicUserData>> {
     query.sort = query.sort || 'id';
     query.order = query.order || 'ASC';
+
     const options = {
       page: query.page || 1,
       limit: query.limit || 3,
@@ -40,7 +39,7 @@ export class UsersService {
       .select('users.*');
 
     if (query.search) {
-      queryBuilder.where('"username", IN(:...search)', {
+      queryBuilder.where('"username" IN(:...search)', {
         search: query.search.split(','),
       });
     }

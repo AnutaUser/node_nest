@@ -41,10 +41,10 @@ export class CreatePetDto {
   @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
-  createdAt;
+  createdAt: Date;
 
   @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
-  updatedAt;
+  updatedAt: Date;
 }
