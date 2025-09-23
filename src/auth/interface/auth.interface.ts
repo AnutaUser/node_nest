@@ -1,9 +1,9 @@
 export interface JWTPayload {
   id?: string;
-  username: string;
+  username?: string;
   age?: number;
-  email: string;
-  password: string;
+  email?: string;
+  password?: string;
   address?: {
     kode?: string;
     city?: string;
@@ -11,7 +11,7 @@ export interface JWTPayload {
     number?: string;
   };
   avatar?: string;
-  status: boolean;
+  status?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
