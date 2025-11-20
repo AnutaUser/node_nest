@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
+import { Pet } from '../../pets/entities/pet.entity';
 
 @Entity()
 class Address {
@@ -54,4 +56,7 @@ export class User {
     nullable: true,
   })
   updatedAt: Date;
+
+  @OneToMany(() => Pet, (entity) => entity.user, { cascade: true })
+  pets: Pet[];
 }

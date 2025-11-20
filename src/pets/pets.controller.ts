@@ -6,44 +6,48 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 
-import { CreatePetDto } from './dto/create-pet.dto';
-import { UpdatePetDto } from './dto/update-pet.dto';
+import { PetCreateDto } from './dto/pet-create.dto';
+import { PetUpdateDto } from './dto/pet-update.dto';
 import { PetsService } from './pets.service';
 
+@ApiTags('Pets')
 @Controller('pets')
 export class PetsController {
   constructor(private readonly petsService: PetsService) {}
 
-  @ApiTags('Pets')
-  @Post()
-  create(@Body() createPetDto: CreatePetDto) {
-    return this.petsService.create(createPetDto);
+  @UseGuards(AuthGuard())
+  @Post(':userId')
+  async create(@Body() petCreateDto: PetCreateDto) {
+    return await this.petsService.create(petCreateDto);
   }
 
-  @ApiTags('Pets')
   @Get()
-  findAll() {
-    return this.petsService.findAll();
+  async findAll() {
+    return await this.petsService.findAll();
   }
 
-  @ApiTags('Pets')
   @Get(':petId')
-  findOne(@Param('petId') petId: string) {
-    return this.petsService.findOne(petId);
+  async findOne(@Param('petId') petId: string) {
+    return await this.petsService.findOne(petId);
   }
 
-  @ApiTags('Pets')
+  @UseGuards(AuthGuard())
   @Patch(':petId')
-  update(@Param('petId') petId: string, @Body() updatePetDto: UpdatePetDto) {
-    return this.petsService.update(petId, updatePetDto);
+  async update(
+    @Param('petId') petId: string,
+    @Body() petUpdateDto: PetUpdateDto,
+  ) {
+    return await this.petsService.update(petId, petUpdateDto);
   }
 
-  @ApiTags('Pets')
+  // @UseGuards(AuthGuard())
   @Delete(':petId')
-  remove(@Param('petId') petId: string) {
-    return this.petsService.remove(petId);
+  async remove(@Param('petId') petId: string) {
+    return await this.petsService.remove(petId);
   }
 }

@@ -38,7 +38,7 @@ export class Address {
   number?: string;
 }
 
-export class CreateUserDto {
+export class UserCreateDto {
   @ApiProperty({ required: true })
   @IsString()
   @IsNotEmpty()

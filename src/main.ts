@@ -13,7 +13,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
-    .setTitle('Api example')
+    .setTitle('Veterinary clinic')
     .setDescription('The API description')
     .setVersion('1.0')
     .addTag('API')

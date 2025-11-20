@@ -16,7 +16,7 @@ import {
   PaginatedDto,
 } from '../common/pagination/response';
 import { PublicUserQueryDto } from '../core/query/users.query.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UserUpdateDto } from './dto/user-update.dto';
 import { PublicUserData } from './interface/user.interface';
 import { UsersService } from './users.service';
 
@@ -44,9 +44,9 @@ export class UsersController {
   @Patch(':userId')
   async update(
     @Param('userId') userId: string,
-    @Body() updateUserDto: UpdateUserDto,
+    @Body() userUpdateDto: UserUpdateDto,
   ) {
-    return await this.usersService.update(userId, updateUserDto);
+    return await this.usersService.update(userId, userUpdateDto);
   }
 
   @Delete(':userId')

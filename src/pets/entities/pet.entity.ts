@@ -1,4 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+
+import { Staff } from '../../staff/entities/staff.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity()
 export class Pet {
@@ -36,4 +46,12 @@ export class Pet {
     nullable: true,
   })
   updatedAt: Date;
+
+  @OneToOne(() => User, (entity) => entity.pets)
+  @JoinColumn()
+  user: User;
+
+  @ManyToMany(() => Staff, (entity) => entity.pets)
+  @JoinColumn()
+  staff: Staff[];
 }

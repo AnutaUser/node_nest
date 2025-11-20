@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsDate,
-  IsEmail,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -10,10 +9,13 @@ import {
   Max,
   Min,
 } from 'class-validator';
+import { JoinColumn, ManyToMany } from 'typeorm';
 
-export class PublicUserData {
+import { Staff } from '../../staff/entities/staff.entity';
+
+export class PublicPetData {
   @ApiProperty()
-  id: string;
+  userId: string;
 
   @ApiProperty({ required: true })
   @IsString()
@@ -22,7 +24,6 @@ export class PublicUserData {
 
   @ApiProperty({ required: true })
   @IsString()
-  @IsEmail()
   @IsNotEmpty()
   type: string;
 
@@ -57,4 +58,14 @@ export class PublicUserData {
   @IsDate()
   @IsOptional()
   updatedAt: Date;
+
+  // @ApiProperty()
+  // @OneToOne(() => User, (entity) => entity.pets)
+  // @IsObject()
+  // user: User;
+
+  @ApiProperty()
+  @ManyToMany(() => Staff, (entity) => entity.pets)
+  @JoinColumn()
+  staff: Staff[];
 }

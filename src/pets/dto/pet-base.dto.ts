@@ -1,13 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
 
-export class CreatePetDto {
+import { PetTypeEnum } from '../enum/pet-type.enum';
+
+export class PetBaseDto {
   @ApiProperty({ required: true })
   @IsString()
   @IsNotEmpty()
@@ -19,9 +22,9 @@ export class CreatePetDto {
   age: number;
 
   @ApiProperty({ required: true })
-  @IsOptional()
-  @IsString()
-  type: string;
+  @IsEnum(PetTypeEnum)
+  @IsNotEmpty()
+  type: PetTypeEnum;
 
   @ApiProperty({ required: false })
   @IsOptional()

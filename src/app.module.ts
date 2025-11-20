@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmConfiguration } from './configs/database/type-orm-configuration';
 import { PetsModule } from './pets/pets.module';
+import { StaffModule } from './staff/staff.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -16,6 +17,7 @@ import { UsersModule } from './users/users.module';
     PetsModule,
     AuthModule,
     PassportModule,
+    StaffModule,
   ],
   controllers: [AppController],
   providers: [AppService],

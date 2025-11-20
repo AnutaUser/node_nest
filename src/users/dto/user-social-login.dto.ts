@@ -4,10 +4,9 @@ import {
   IsNotEmpty,
   IsString,
   IsStrongPassword,
-  Matches,
 } from 'class-validator';
 
-export class LoginUserDto {
+export class UserSocialLoginDto {
   @ApiProperty({ required: true, example: 'user@gmail.com' })
   @IsString()
   @IsEmail()
@@ -18,6 +17,5 @@ export class LoginUserDto {
   @IsString()
   @IsStrongPassword()
   @IsNotEmpty()
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@#$%^&(){}:;,=]).{8,50}$/)
-  password: string;
+  accessToken: string;
 }

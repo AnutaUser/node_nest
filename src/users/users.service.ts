@@ -11,16 +11,17 @@ import { AuthService } from '../auth/auth.service';
 import { JWTPayload } from '../auth/interface/auth.interface';
 import { PaginatedDto } from '../common/pagination/response';
 import { PublicUserQueryDto } from '../core/query/users.query.dto';
-import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
-import { SocialLoginUserDto } from './dto/social-login-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UserCreateDto } from './dto/user-create.dto';
+import { UserLoginDto } from './dto/user-login.dto';
+import { UserSocialLoginDto } from './dto/user-social-login.dto';
+import { UserUpdateDto } from './dto/user-update.dto';
 import { User } from './entities/user.entity';
 import { PublicUserData } from './interface/user.interface';
 
 @Injectable()
 export class UsersService {
   private salt = bcrypt.genSaltSync(+process.env.BCRYPT_SALT);
+  private userForRes = 'users.*';
 
   constructor(
     @InjectRepository(User)
@@ -31,7 +32,7 @@ export class UsersService {
   async findAllUsers(
     query: PublicUserQueryDto,
   ): Promise<PaginatedDto<PublicUserData>> {
-    query.sort = query.sort || 'id';
+    query.sort = query.sort || 'userId';
     query.order = query.order || 'ASC';
 
     const options = {
@@ -41,12 +42,19 @@ export class UsersService {
 
     const queryBuilder = this.usersRepository
       .createQueryBuilder('users')
-      .select('users.*');
+      .innerJoin('users.pets', 'pets')
+      .select(this.userForRes);
 
     if (query.search) {
       queryBuilder.where('"username" IN(:...search)', {
         search: query.search.split(','),
       });
+    }
+
+    if (query.type) {
+      queryBuilder.andWhere(
+        `LOWER(pets.type) LIKE '%${query.type.toLowerCase()}%'`,
+      );
     }
 
     queryBuilder.orderBy(`"${query.sort}"`, query.order as 'ASC' | 'DESC');
@@ -55,7 +63,7 @@ export class UsersService {
       queryBuilder,
       options,
     );
-
+    console.log(rawResults);
     return {
       page: pagination.meta.currentPage,
       pages: pagination.meta.totalPages,
@@ -65,7 +73,7 @@ export class UsersService {
     };
   }
 
-  async createUser(data: CreateUserDto) {
+  async createUser(data: UserCreateDto) {
     const findUser = await this.usersRepository.findOne({
       where: { email: data.email },
     });
@@ -83,16 +91,19 @@ export class UsersService {
 
     await this.usersRepository.save(newUser);
 
-    const token = await this.signIn({ ...newUser, id: newUser.id.toString() });
+    const token = await this.signIn({
+      ...newUser,
+      id: newUser.id.toString(),
+    });
 
     return { token };
   }
 
-  async findOne(userId: string): Promise<CreateUserDto> {
+  async findOne(userId: string): Promise<UserCreateDto> {
     return await this.usersRepository.findOne({ where: { id: userId } });
   }
 
-  async loginUser(data: LoginUserDto) {
+  async loginUser(data: UserLoginDto) {
     const user = await this.usersRepository.findOne({
       where: { email: data.email },
     });
@@ -116,7 +127,7 @@ export class UsersService {
     return { token };
   }
 
-  async SocialLoginUser(data: SocialLoginUserDto) {
+  async socialLoginUser(data: UserSocialLoginDto) {
     try {
       const oAuthClient = new OAuth2Client(
         process.env.GOOGLE_CLIENT_ID,
@@ -133,30 +144,37 @@ export class UsersService {
 
       return { token };
     } catch (e) {
-      throw new HttpException(
-        'Google auth failed',
-        HttpStatus.UNAUTHORIZED,
-        e.messages,
-      );
+      throw new HttpException('Google auth failed', HttpStatus.UNAUTHORIZED);
     }
   }
 
-  async update(userId: string, updateUserDto: UpdateUserDto) {
-    const user = await this.usersRepository.findOne({
-      where: { id: userId },
-    });
+  async update(userId: string, userUpdateDto: UserUpdateDto) {
+    try {
+      const user = await this.usersRepository.findOne({
+        where: { id: userId },
+      });
 
-    user.updatedAt = new Date();
+      user.updatedAt = new Date();
 
-    await this.usersRepository.update(user.id, updateUserDto);
+      await this.usersRepository.update(user.id, {
+        ...userUpdateDto,
+        updatedAt: new Date().toISOString(),
+      });
 
-    return { ...user, ...updateUserDto };
+      return { ...user, ...userUpdateDto };
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.FORBIDDEN);
+    }
   }
 
   async remove(userId: string) {
-    await this.usersRepository.delete({ id: userId });
+    try {
+      await this.usersRepository.delete({ id: userId });
 
-    return `This action removes a #${userId} user`;
+      return `This action removes a #${userId} user`;
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.UNAUTHORIZED);
+    }
   }
 
   async signIn(user: JWTPayload) {

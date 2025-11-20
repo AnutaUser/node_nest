@@ -1,32 +1,30 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
-  IsArray,
   IsBoolean,
   IsDate,
-  IsEmail,
   IsNotEmpty,
   IsNumber,
-  IsObject,
   IsOptional,
   IsString,
+  IsStrongPassword,
+  Matches,
   Max,
   Min,
-  ValidateNested,
 } from 'class-validator';
-import { OneToMany } from 'typeorm';
 
-import { Pet } from '../../pets/entities/pet.entity';
-import { Address } from '../dto/user-create.dto';
-
-export class PublicUserData {
+export class PublicStaffData {
   @ApiProperty()
-  userId: string;
+  staffId: string;
 
   @ApiProperty({ required: true })
   @IsString()
   @IsNotEmpty()
-  username: string;
+  firstName: string;
+
+  @ApiProperty({ required: true })
+  @IsString()
+  @IsNotEmpty()
+  lastName: string;
 
   @ApiProperty({ required: false })
   @IsNumber()
@@ -35,34 +33,37 @@ export class PublicUserData {
   @Min(18)
   age: number;
 
-  @ApiProperty({ required: true, example: 'user@gmail.com' })
+  @ApiProperty({ required: true })
   @IsString()
-  @IsEmail()
   @IsNotEmpty()
   email: string;
 
   @ApiProperty({ required: true })
   @IsString()
+  @IsStrongPassword()
   @IsNotEmpty()
-  @IsNotEmpty()
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@#$%^&(){}:;,=]).{8,50}$/)
   password: string;
 
   @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
-  avatar: string;
+  photo: string;
 
   @ApiProperty({ required: false })
-  @IsObject()
+  @IsString()
   @IsOptional()
-  @Type(() => Address)
-  @ValidateNested()
-  address: Address;
+  logo: string;
 
   @ApiProperty({ required: true })
   @IsOptional()
   @IsBoolean()
-  status: boolean;
+  position: boolean;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsBoolean()
+  degree: boolean;
 
   @ApiProperty({ required: false, default: new Date() })
   @IsDate()
@@ -73,9 +74,4 @@ export class PublicUserData {
   @IsDate()
   @IsOptional()
   updatedAt: Date;
-
-  @ApiProperty()
-  @OneToMany(() => Pet, (entity) => entity.user)
-  @IsArray()
-  pets?: Pet[];
 }

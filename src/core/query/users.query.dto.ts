@@ -26,6 +26,11 @@ export class PublicUserQueryDto {
   @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
+  type: string;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
   order: string;
 
   @ApiProperty({ required: false })
