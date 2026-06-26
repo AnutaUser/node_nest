@@ -20,7 +20,7 @@ import { PetsService } from './pets.service';
 export class PetsController {
   constructor(private readonly petsService: PetsService) {}
 
-  @UseGuards(AuthGuard())
+  // @UseGuards(AuthGuard())
   @Post(':userId')
   async create(@Body() petCreateDto: PetCreateDto) {
     return await this.petsService.create(petCreateDto);

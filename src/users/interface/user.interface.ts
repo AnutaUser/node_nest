@@ -5,6 +5,7 @@ import {
   IsBoolean,
   IsDate,
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsObject,
@@ -16,6 +17,7 @@ import {
 } from 'class-validator';
 import { OneToMany } from 'typeorm';
 
+import { UserGenderEnum } from '../../enums/user.gender.enum';
 import { Pet } from '../../pets/entities/pet.entity';
 import { Address } from '../dto/user-create.dto';
 
@@ -35,15 +37,19 @@ export class PublicUserData {
   @Min(18)
   age: number;
 
+  @ApiProperty({ required: false})
+  @IsEnum(UserGenderEnum)
+  @IsOptional()
+  gender: string;
+
   @ApiProperty({ required: true, example: 'user@gmail.com' })
   @IsString()
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: false })
   @IsString()
-  @IsNotEmpty()
   @IsNotEmpty()
   password: string;
 

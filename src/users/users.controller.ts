@@ -35,7 +35,7 @@ export class UsersController {
     return await this.usersService.findAllUsers(query);
   }
 
-  @UseGuards(AuthGuard())
+  // @UseGuards(AuthGuard())
   @Get(':userId')
   async findOne(@Param('userId') userId: string) {
     return await this.usersService.findOne(userId);

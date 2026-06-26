@@ -4,6 +4,7 @@ import {
   IsBoolean,
   IsDate,
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsObject,
@@ -15,6 +16,8 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
+
+import { UserGenderEnum } from '../../enums/user.gender.enum';
 
 export class Address {
   @ApiProperty({ required: false, example: '00-000' })
@@ -50,6 +53,11 @@ export class UserCreateDto {
   @Max(130)
   @Min(18)
   age: number;
+
+  @ApiProperty({ required: false })
+  @IsEnum(UserGenderEnum)
+  @IsOptional()
+  gender: string;
 
   @ApiProperty({ required: true, example: 'user@gmail.com' })
   @IsString()

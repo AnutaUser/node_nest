@@ -4,6 +4,7 @@ export interface JWTPayload {
   age?: number;
   email?: string;
   password?: string;
+  gender?: string;
   address?: {
     kode?: string;
     city?: string;

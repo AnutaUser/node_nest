@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
+import { UserGenderEnum } from '../../enums/user.gender.enum';
 import { Pet } from '../../pets/entities/pet.entity';
 
 @Entity()
@@ -27,6 +28,9 @@ export class User {
 
   @Column({ type: 'int', nullable: true })
   age: number;
+
+  @Column({ enum: UserGenderEnum, nullable: true })
+  gender: string;
 
   @Column({ type: 'varchar', nullable: false, unique: true })
   email: string;

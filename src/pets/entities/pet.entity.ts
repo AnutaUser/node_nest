@@ -1,11 +1,11 @@
 import {
   Column,
   Entity,
-  JoinColumn,
-  ManyToMany,
+  JoinColumn, JoinTable,
+  ManyToMany, ManyToOne,
   OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+  PrimaryGeneratedColumn
+} from "typeorm";
 
 import { Staff } from '../../staff/entities/staff.entity';
 import { User } from '../../users/entities/user.entity';
@@ -47,11 +47,11 @@ export class Pet {
   })
   updatedAt: Date;
 
-  @OneToOne(() => User, (entity) => entity.pets)
-  @JoinColumn()
+  @ManyToOne(() => User, (entity) => entity.pets)
+  @JoinTable()
   user: User;
 
   @ManyToMany(() => Staff, (entity) => entity.pets)
-  @JoinColumn()
+  // @JoinColumn()
   staff: Staff[];
 }

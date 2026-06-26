@@ -21,7 +21,11 @@ import { PublicUserData } from './interface/user.interface';
 @Injectable()
 export class UsersService {
   private salt = bcrypt.genSaltSync(+process.env.BCRYPT_SALT);
-  private userForRes = 'users.*';
+  // private userForRes = 'users.*';
+  private userForRes =
+    'users.id, users.username, users.age, users.email,' +
+    ' users.kode, users.city, users.street, users.number, ' +
+    'users.avatar, users.status, users.gender, users.createdAt, users.updatedAt';
 
   constructor(
     @InjectRepository(User)
@@ -37,7 +41,7 @@ export class UsersService {
 
     const options = {
       page: query.page || 1,
-      limit: query.limit || 3,
+      limit: query.limit || 5,
     };
 
     const queryBuilder = this.usersRepository
@@ -63,7 +67,8 @@ export class UsersService {
       queryBuilder,
       options,
     );
-    console.log(rawResults);
+    console.log(rawResults.length);
+
     return {
       page: pagination.meta.currentPage,
       pages: pagination.meta.totalPages,
@@ -77,10 +82,10 @@ export class UsersService {
     const findUser = await this.usersRepository.findOne({
       where: { email: data.email },
     });
-
+    console.log(data);
     if (findUser) {
       throw new HttpException(
-        'user with this email already exist',
+        'user with this em@il already exist',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -89,14 +94,14 @@ export class UsersService {
 
     const newUser = this.usersRepository.create(data);
 
-    await this.usersRepository.save(newUser);
+    await this.usersRepository.save({ ...newUser });
 
     const token = await this.signIn({
       ...newUser,
-      id: newUser.id.toString(),
+      id: newUser.id,
     });
 
-    return { token };
+    return { token, newUser };
   }
 
   async findOne(userId: string): Promise<UserCreateDto> {

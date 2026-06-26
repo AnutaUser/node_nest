@@ -1,6 +1,7 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 
+import { UserGenderEnum } from '../../enums/user.gender.enum';
 import { UserCreateDto } from './user-create.dto';
 
 export class UserUpdateDto extends OmitType(UserCreateDto, [
@@ -11,4 +12,14 @@ export class UserUpdateDto extends OmitType(UserCreateDto, [
   @IsString()
   @IsOptional()
   username: string;
+
+  @ApiProperty({ required: false })
+  @IsNumber()
+  @IsOptional()
+  age: number;
+
+  @ApiProperty({ required: false })
+  @IsEnum(UserGenderEnum)
+  @IsOptional()
+  gender: string;
 }
