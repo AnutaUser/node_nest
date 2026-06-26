@@ -1,11 +1,11 @@
 import {
   Column,
   Entity,
-  JoinColumn, JoinTable,
-  ManyToMany, ManyToOne,
-  OneToOne,
-  PrimaryGeneratedColumn
-} from "typeorm";
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { Staff } from '../../staff/entities/staff.entity';
 import { User } from '../../users/entities/user.entity';

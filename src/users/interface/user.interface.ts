@@ -37,7 +37,7 @@ export class PublicUserData {
   @Min(18)
   age: number;
 
-  @ApiProperty({ required: false})
+  @ApiProperty({ required: false })
   @IsEnum(UserGenderEnum)
   @IsOptional()
   gender: string;
